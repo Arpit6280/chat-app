@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import chatApp from "./chat-app.png";
-// import axios from "axios";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 // import request from "../Request/request";
@@ -33,8 +33,17 @@ function SignUp() {
       name: name,
       email: email,
       password: pwd,
+      phoneNo: phoneNo,
     };
     console.log(obj);
+    axios
+      .post("http://localhost:4000/users/signup", obj)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
     setEmail("");
     setName("");
