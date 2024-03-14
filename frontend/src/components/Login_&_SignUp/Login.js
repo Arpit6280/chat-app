@@ -26,17 +26,17 @@ function Login() {
     };
     console.log(email, pswd);
     console.log(obj);
-    // axios
-    //   .post("http://localhost:4000/users/signup", obj)
-    //   .then((res) => {
-
-    //     toast.success(res.data.message);
-    //     console.log(res.data);
-    //     // navigate("/");
-    //   })
-    //   .catch((err) => {
-    //     toast.error(err.response.data.msg);
-    //   });
+    axios
+      .post("http://localhost:4000/users/login", obj)
+      .then((res) => {
+        toast.success("Login Succesfully");
+        console.log(res);
+        console.log(res.data);
+        // navigate("/");
+      })
+      .catch((err) => {
+        toast.error(err.response.data.msg);
+      });
     setEmail("");
     setPswd("");
   };
