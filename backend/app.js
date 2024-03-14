@@ -5,15 +5,17 @@ const cors = require("cors");
 const userRoutes = require("./routes/users");
 const sequelize = require("./database/db");
 
-const userController = require("./controller/users");
-
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+  })
+);
 
 app.use(bodyParser.json());
 
-app.post("/users/signup", userController.postAddUser);
+app.use("/users", userRoutes.routes);
 
 sequelize
   .sync()

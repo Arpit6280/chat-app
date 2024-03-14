@@ -39,10 +39,11 @@ function SignUp() {
     axios
       .post("http://localhost:4000/users/signup", obj)
       .then((res) => {
-        console.log(res);
+        toast.success("Signup Succesfully ");
       })
       .catch((err) => {
         console.log(err);
+        toast.error(err.response.data.msg);
       });
 
     setEmail("");
