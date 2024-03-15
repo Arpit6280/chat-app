@@ -27,7 +27,7 @@ exports.postAddUser = (req, res) => {
 };
 
 function generateAccessToken(id) {
-  return jwt.sign({ userId: id }, process.env.DB_JWT_SECRET_KEY);
+  return jwt.sign({ userId: id }, process.env.JWT_SECRET_KEY);
 }
 
 exports.postLoginUser = async (req, res) => {

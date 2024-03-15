@@ -32,6 +32,7 @@ function Login() {
         toast.success("Login Succesfully");
         console.log(res);
         console.log(res.data);
+        localStorage.setItem("token", res.data.token);
         // navigate("/");
       })
       .catch((err) => {
