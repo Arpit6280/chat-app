@@ -4,6 +4,7 @@ import "./App.css";
 import SignUp from "./components/Login_&_SignUp/SignUp";
 import { Route, Routes } from "react-router-dom";
 import Login from "./components/Login_&_SignUp/Login";
+import Chat from "./components/Chat/Chat";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/" element={<Chat />} />
       </Routes>
       <ToastContainer />
     </>
