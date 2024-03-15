@@ -1,11 +1,24 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 // import "./chat.css";
 
 function Chat() {
   const [message, setMessage] = useState("");
   let token = localStorage.getItem("token");
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:4000/chat/getmsg", {
+        headers: { Authorization: token },
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        toast.error(err.response.data.msg);
+      });
+  }, [token]);
 
   const messageHandler = (e) => {
     setMessage(e.target.value);
@@ -30,7 +43,7 @@ function Chat() {
 
     console.log(`Current Time: ${currentTime}`);
     axios
-      .post("http://localhost:4000/chat/msg", obj, {
+      .post("http://localhost:4000/chat/addmsg", obj, {
         headers: { Authorization: token },
       })
       .then((res) => {

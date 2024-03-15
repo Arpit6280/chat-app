@@ -10,8 +10,18 @@ exports.addMsg = async (req, res) => {
       time: currentTime,
       userId: req.user.id,
     });
-    res.status(201).json(result);
+    return res.status(201).json(result);
   } catch (e) {
+    return res.status(401).json({ msg: "Something Wrong Try again" });
+  }
+};
+
+exports.getMsg = async (req, res) => {
+  try {
+    let result = await req.user.getMessages();
+    console.log(result);
+    return res.status(201).json(result);
+  } catch {
     return res.status(401).json({ msg: "Something Wrong Try again" });
   }
 };
