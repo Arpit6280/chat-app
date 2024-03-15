@@ -6,22 +6,52 @@ import { toast } from "react-toastify";
 function Chat() {
   const [message, setMessage] = useState("");
   let token = localStorage.getItem("token");
+  let [totalMsg, setTotalMsg] = useState([]);
 
   useEffect(() => {
-    setInterval(() => {
-      axios
-        .get("http://localhost:4000/chat/getmsg", {
-          headers: { Authorization: token },
-        })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          toast.error(err.response.data.msg);
-        });
-    }, 1000);
-  }, [token]);
+    request();
+  }, []);
 
+  function request() {
+    // setInterval(() => {
+
+    let localmsg = localStorage.getItem("msgs");
+
+    if (localmsg === undefined || localmsg === null || localmsg === "[]") {
+      localmsg = [];
+    } else localmsg = JSON.parse(localmsg);
+
+    let n = localmsg.length;
+    let lId;
+    if (n !== 0) lId = localmsg[n - 1].id;
+
+    axios
+      .get(`http://localhost:4000/chat/getmsg?lastmsg=${lId}`, {
+        headers: { Authorization: token },
+      })
+      .then((res) => {
+        console.log(res);
+        let newMsg = res.data;
+        let nmsgL = newMsg.length;
+        if (nmsgL >= 10) {
+          newMsg = newMsg.slice(0, 10);
+        } else {
+          let remL = 10 - nmsgL;
+          let oldMsgL = localmsg.length;
+          if (oldMsgL > remL) {
+            localmsg = localmsg.slice(oldMsgL - remL, oldMsgL);
+          }
+        }
+
+        let c = [...localmsg, ...newMsg];
+        localStorage.setItem("msgs", JSON.stringify(c));
+        setTotalMsg(c);
+      })
+      .catch((err) => {
+        toast.error(err.response.data.msg);
+      });
+    // }, 1000);
+  }
   const messageHandler = (e) => {
     setMessage(e.target.value);
   };
@@ -55,6 +85,9 @@ function Chat() {
         toast.error(err.response.data.msg);
       });
   };
+  console.log(totalMsg);
+
+  // console.log(localStorage.getItem("msgs"));
   return (
     <div className="w-full relative h-screen">
       <div className=" flex justify-center ">
