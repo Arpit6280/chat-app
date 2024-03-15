@@ -8,16 +8,18 @@ function Chat() {
   let token = localStorage.getItem("token");
 
   useEffect(() => {
-    axios
-      .get("http://localhost:4000/chat/getmsg", {
-        headers: { Authorization: token },
-      })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        toast.error(err.response.data.msg);
-      });
+    setInterval(() => {
+      axios
+        .get("http://localhost:4000/chat/getmsg", {
+          headers: { Authorization: token },
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          toast.error(err.response.data.msg);
+        });
+    }, 1000);
   }, [token]);
 
   const messageHandler = (e) => {
