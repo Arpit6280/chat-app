@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 function Chat() {
   const [message, setMessage] = useState("");
   let token = localStorage.getItem("token");
+  const [groupName, setGroupName] = useState("");
   let [totalMsg, setTotalMsg] = useState([]);
 
   useEffect(() => {
@@ -85,6 +86,12 @@ function Chat() {
         toast.error(err.response.data.msg);
       });
   };
+  const groupHandler = (e) => {
+    setGroupName(e.target.value);
+  };
+  const submitHandler2 = (e) => {
+    e.preventDefault();
+  };
   console.log(totalMsg);
 
   // console.log(localStorage.getItem("msgs"));
@@ -113,6 +120,16 @@ function Chat() {
             onChange={messageHandler}
           />
           <button type="submit">send</button>
+        </form>
+
+        <form onSubmit={submitHandler2}>
+          <input
+            type="text"
+            placeholder="enter group name"
+            value={groupName}
+            onChange={groupHandler}
+          />
+          <button>Create Group</button>
         </form>
       </div>
     </div>
