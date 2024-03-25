@@ -5,6 +5,7 @@ import SignUp from "./components/Login_&_SignUp/SignUp";
 import { Route, Routes } from "react-router-dom";
 import Login from "./components/Login_&_SignUp/Login";
 import Chat from "./components/Chat/Chat";
+import NewChat from "./components/Chat/NewChat";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/" element={<Chat />} />
       </Routes>
+      {/* <NewChat /> */}
       <ToastContainer />
     </>
   );

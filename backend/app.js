@@ -4,6 +4,7 @@ const cors = require("cors");
 
 const userRoutes = require("./routes/users");
 const chatRoutes = require("./routes/chat");
+const groupRoutes = require("./routes/group");
 const sequelize = require("./database/db");
 const User = require("./model/user");
 const Message = require("./model/message");
@@ -23,6 +24,7 @@ app.use(bodyParser.json());
 
 app.use("/users", userRoutes.routes);
 app.use("/chat", chatRoutes.routes);
+app.use("/group", groupRoutes.routes);
 
 User.hasMany(Message);
 Message.belongsTo(User, { constraints: true, onDelete: "CASCADE" });

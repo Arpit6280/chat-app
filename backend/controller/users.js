@@ -53,3 +53,13 @@ exports.postLoginUser = async (req, res) => {
     return res.status(500).json({ msg: "Something wrong" });
   }
 };
+
+exports.allUsers = async (req, res) => {
+  console.log("all");
+  try {
+    const users = await User.findAll();
+    return res.status(200).json(users);
+  } catch (error) {
+    return res.status(500).json({ msg: "Something wrong" });
+  }
+};

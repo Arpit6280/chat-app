@@ -1,216 +1,15 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+/* eslint-disable jsx-a11y/anchor-has-content */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import React, { useState } from "react";
 import Model from "../Model/Model";
-import AddMemberModal from "../Model/AddMemberModal";
-// import "./chat.css";
 
-function Chat() {
-  const [message, setMessage] = useState("");
-  const [groups, setGroups] = useState([]);
-  let token = localStorage.getItem("token");
-  const [groupName, setGroupName] = useState("");
-  let [totalMsg, setTotalMsg] = useState([]);
+function NewChat() {
   const [showModal, setShowModal] = useState(false);
-  const [showaddModal, setShowAddModal] = useState(false);
-  const [groupmsg, setGroupMsg] = useState([]);
-  const [groupId, setGroupId] = useState([]);
-  const [members, setMembers] = useState([]);
-  const modalHandler = (e) => {
-    e.preventDefault();
+  const modalHandler = () => {
     setShowModal(true);
   };
-
-  const addmodalHandler = (e) => {
-    e.preventDefault();
-    setShowAddModal(true);
-  };
-
-  useEffect(() => {
-    // request();
-    //  const func=async()=>{
-    getgroups();
-    // changeGroup();
-    // }
-  }, []);
-
-  const changeGroup = (id) => {
-    console.log(id);
-    setGroupId(id);
-    axios
-      .get(`http://localhost:4000/chat/getmsg?groupId=${id}`, {
-        headers: { Authorization: token },
-      })
-      .then((res) => {
-        setGroupMsg(res.data);
-        getMembersHandler(id);
-      });
-  };
-
-  const deleteHandler = (id) => {
-    console.log(id);
-    axios
-      .delete(`http://localhost:4000/group/removeUser?userId=${id}`, {
-        headers: { Authorization: token },
-      })
-      .then((res) => {
-        toast.success("member removed from group");
-        getMembersHandler(groupId);
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error("error");
-      });
-  };
-
-  const getMembersHandler = (id) => {
-    axios
-      .get(`http://localhost:4000/group/getmembers?groupId=${id}`, {
-        headers: { Authorization: token },
-      })
-      .then((res) => {
-        console.log(res);
-        setMembers(res.data);
-      });
-  };
-
-  const getgroups = () => {
-    axios
-      .get(`http://localhost:4000/group/getgroups`, {
-        headers: { Authorization: token },
-      })
-      .then((res) => {
-        console.log(res);
-        setGroups(res.data);
-        setGroupId(res.data[0].id);
-        changeGroup(res.data[0].id);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  // function request() {
-  //   // setInterval(() => {
-
-  //   let localmsg = localStorage.getItem("msgs");
-
-  //   if (localmsg === undefined || localmsg === null || localmsg === "[]") {
-  //     localmsg = [];
-  //   } else localmsg = JSON.parse(localmsg);
-
-  //   let n = localmsg.length;
-  //   let lId;
-  //   if (n !== 0) lId = localmsg[n - 1].id;
-
-  //   axios
-  //     .get(`http://localhost:4000/chat/getmsg?lastmsg=${lId}`, {
-  //       headers: { Authorization: token },
-  //     })
-  //     .then((res) => {
-  //       console.log(res);
-  //       let newMsg = res.data;
-  //       let nmsgL = newMsg.length;
-  //       if (nmsgL >= 10) {
-  //         newMsg = newMsg.slice(0, 10);
-  //       } else {
-  //         let remL = 10 - nmsgL;
-  //         let oldMsgL = localmsg.length;
-  //         if (oldMsgL > remL) {
-  //           localmsg = localmsg.slice(oldMsgL - remL, oldMsgL);
-  //         }
-  //       }
-
-  //       let c = [...localmsg, ...newMsg];
-  //       localStorage.setItem("msgs", JSON.stringify(c));
-  //       setTotalMsg(c);
-  //     })
-  //     .catch((err) => {
-  //       toast.error(err.response.data.msg);
-  //     });
-  //   // }, 1000);
-  // }
-  const messageHandler = (e) => {
-    console.log(e.target.value);
-    setMessage(e.target.value);
-  };
-
-  const submitHandler = (e) => {
-    e.preventDefault();
-    console.log("hi");
-    let now = new Date();
-
-    // Get the current date, month, year, and time
-    let currentDate = now.getDate(); // Returns the day of the month (1-31)
-    let currentMonth = now.getMonth() + 1; // Returns the month (0-11) so add 1 to get the correct month
-    let currentYear = now.getFullYear(); // Returns the year (four digits)
-    let currentTime = now.toLocaleTimeString(); // Returns the current time in HH:mm:ss format
-    let date = `${currentYear}-${currentMonth}-${currentDate}`;
-    console.log(date);
-    let obj = {
-      date,
-      currentTime,
-      message,
-      groupId,
-    };
-
-    console.log(`Current Time: ${currentTime}`);
-    axios
-      .post("http://localhost:4000/chat/addmsg", obj, {
-        headers: { Authorization: token },
-      })
-      .then((res) => {
-        console.log(res);
-        toast.success("message send successfully");
-      })
-      .catch((err) => {
-        toast.error(err.response.data.msg);
-      });
-  };
-  const groupHandler = (e) => {
-    setGroupName(e.target.value);
-  };
-  const submitHandler2 = (e) => {
-    e.preventDefault();
-  };
-  // console.log(totalMsg);
-
-  // console.log(localStorage.getItem("msgs"));
   return (
-    <>
-      {/* <div className="w-full relative h-screen">
-        <div className=" flex justify-center ">
-          <div className="w-3/5 xl:w-2/5">
-            <h1>Chat App</h1>
-            <div className="w-full bg-gray-500">
-              <p>You Joined</p>
-            </div>
-            <div>
-              <p>Vaibhav Joined</p>
-            </div>
-            <div>
-              <p>You: hi there Joined</p>
-            </div>
-          </div>
-        </div>
-        <div className="absolute bottom-0 w-full flex justify-center ">
-          <form onSubmit={submitHandler}>
-            <input
-              type="text"
-              className="border-2 w-3/5"
-              value={message}
-              onChange={messageHandler}
-            />
-            <button type="submit">send</button>
-          </form>
-
-          <form onSubmit={modalHandler}>
-            
-            <button>Create Group</button>
-          </form>
-        </div>
-      </div> */}
-
+    <div>
       <div>
         <div className="relative min-h-screen flex flex-col bg-gray-50">
           <nav className="flex-shrink-0 bg-red-600">
@@ -274,6 +73,20 @@ function Chat() {
                       >
                         + New Group
                       </button>
+                      {/* <div className="flex-shrink-0">
+                        <img src="" alt="" className="h-12 w-12 rounded-full" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <a href="#" className="focus:outline-none">
+                          <span className="absolute inset-0" />
+                          <p className="text-sm font-bold text-red-600">
+                            Dries Vincent
+                          </p>
+                          <p className="text-sm text-gray-500 truncate">
+                            Marketing Manager{" "}
+                          </p>
+                        </a>
+                      </div> */}
                     </div>
                     <div className="mb-4">
                       <div className="relative">
@@ -296,38 +109,53 @@ function Chat() {
                     </div>
                     {/* Search Box end */}
                     {/* User */}
-                    {groups.map((group, i) => (
-                      <div
-                        className="relative rounded-lg px-2 py-2 flex items-center space-x-3 hover:border-gray-400 mb-3 hover:bg-gray-200"
-                        onClick={() => changeGroup(group.id)}
-                      >
-                        <div className="flex-shrink-0">
-                          <img
-                            src=""
-                            alt=""
-                            className="h-10 w-10 rounded-full"
-                          />
-                        </div>
-                        <div className="flex-1 min-w-0">
+                    <div className="relative rounded-lg px-2 py-2 flex items-center space-x-3 hover:border-gray-400 mb-3 hover:bg-gray-200">
+                      <div className="flex-shrink-0">
+                        <img src="" alt="" className="h-10 w-10 rounded-full" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <a href="">
                           <div className="flex items-center justify-between">
                             <p className="text-sm font-bold text-red-600">
-                              {group.name}
+                              Lina Dry
                             </p>
-                            {/* <div className="text-gray-400 text-xs">12:35</div> */}
+                            <div className="text-gray-400 text-xs">12:35</div>
                           </div>
-                          {/* <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-500 truncate">Hi</p>
-        <div className="text-white text-xs bg-red-400 rounded-full px-1 py-0">
-          2
-        </div>
-      </div> */}
-                        </div>
+                          <div className="flex items-center justify-between">
+                            <p className="text-sm text-gray-500 truncate">Hi</p>
+                            <div className="text-white text-xs bg-red-400 rounded-full px-1 py-0">
+                              2
+                            </div>
+                          </div>
+                        </a>
                       </div>
-                    ))}
+                    </div>
+                    {/* user2 */}
+                    <div className="relative rounded-lg px-2 py-2 flex items-center space-x-3 hover:border-gray-400 mb-3 hover:bg-gray-200">
+                      <div className="flex-shrink-0">
+                        <img src="" alt="" className="h-10 w-10 rounded-full" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <a href="">
+                          <div className="flex items-center justify-between">
+                            <p className="text-sm font-bold text-red-600">
+                              Lina Dry
+                            </p>
+                            <div className="text-gray-400 text-xs">12:35</div>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <p className="text-sm text-gray-500 truncate">Hi</p>
+                            <div className="text-white text-xs bg-red-400 rounded-full px-1 py-0">
+                              2
+                            </div>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-
+              {/* Middle Content Start */}
               <div className="flex-1 p:2 sm:pb-6 justify-between flex flex-col h-screen hidden xl:flex">
                 <div className="flex-sm:items-center justify-between py-3 border-b border-gray-200 p-3">
                   <div className="flex items-center space-x-4">
@@ -362,9 +190,10 @@ function Chat() {
                     </button>
                   </div>
                 </div>
-
+                {/* message start here */}
                 <div className="flex flex-col space py-4 p-3 overflow-y-auto scrollbar-thumb-blue scollbar-thumb-rounded scrollbar-track-blue-lighter scollbar-w-2 scrolling-touch">
-                  {/* <div className="chat-message ">
+                  {/* first message */}
+                  <div className="chat-message ">
                     <div className="flex items-end">
                       <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
                         <div>
@@ -381,6 +210,7 @@ function Chat() {
                     </div>
                   </div>
 
+                  {/* second message */}
                   <div className="chat-message">
                     <div className="flex items-end justify-end">
                       <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
@@ -444,32 +274,13 @@ function Chat() {
                         className="w-6 h-6 rounded-full order-1"
                       />
                     </div>
-                  </div> */}
-
-                  {groupmsg.map((msg) => (
-                    <div className="chat-message ">
-                      <div className="flex items-end">
-                        <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
-                          <div>
-                            <span className="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-200 text-gray-600">
-                              {msg.msg}
-                            </span>
-                          </div>
-                        </div>
-                        <img
-                          src=""
-                          alt=""
-                          className="w-6 h-6 rounded-full order-1"
-                        />
-                      </div>
-                    </div>
-                  ))}
+                  </div>
                 </div>
 
                 {/* message end here */}
                 <div className="border-t-2 border-gray-200 px-4 pt-4 mb-2">
                   <div className="relative flex">
-                    {/* <span className="absolute inset-y-0 flex items-center">
+                    <span className="absolute inset-y-0 flex items-center">
                       <button className="inline-flex items-center justify-center rounded-full h-12 w-12 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300">
                         <svg
                           className="h-6 w-6 text-gray-400"
@@ -481,20 +292,12 @@ function Chat() {
                           <path />
                         </svg>
                       </button>
-                    </span> */}
-
-                    <form onSubmit={submitHandler}>
-                      <input
-                        type="text"
-                        placeholder="write something"
-                        value={message}
-                        onChange={messageHandler}
-                        className="focus:ring-red-500 focus:border-red-500 w-full focus:placeholder-gray-400 text-gray-600 placeholder-gray-300 pl-12 bg-gray-100 rounded-full py-3 border-gray-200"
-                      />
-                      <button type="submit" style={{ cursor: "pointer" }}>
-                        Send
-                      </button>
-                    </form>
+                    </span>
+                    <input
+                      type="text"
+                      placeholder="write something"
+                      className="focus:ring-red-500 focus:border-red-500 w-full focus:placeholder-gray-400 text-gray-600 placeholder-gray-300 pl-12 bg-gray-100 rounded-full py-3 border-gray-200"
+                    />
                   </div>
                 </div>
               </div>
@@ -510,39 +313,15 @@ function Chat() {
                     />
                     <h2 className="m-auto text-2xl mt-2">Kina Mayer</h2>
                   </div>
-                  <button
-                    className="w-full bg-sky-400 hover:bg-gray-500 py-2 mb-2 text-white"
-                    onClick={addmodalHandler}
-                  >
-                    + Add Members
-                  </button>
-                  {members.map((member) => (
-                    <div>
-                      <span>{member.name} </span>
-                      <button onClick={() => deleteHandler(member.id)}>
-                        Delete
-                      </button>
-                    </div>
-                  ))}
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <form onSubmit={modalHandler}>
-          <button>Create Group</button>
-        </form>
       </div>
-
       <Model isVisible={showModal} onClose={() => setShowModal(false)} />
-      <AddMemberModal
-        isVisible={showaddModal}
-        onClose={() => setShowAddModal(false)}
-        preusers={members}
-        groupId={groupId}
-      />
-    </>
+    </div>
   );
 }
 
-export default Chat;
+export default NewChat;
